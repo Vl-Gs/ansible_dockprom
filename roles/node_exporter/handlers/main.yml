@@ -1,0 +1,10 @@
+---
+- name: restart node_exporter
+  docker_container:
+    name: node_exporter
+    restart: yes
+
+- name: reload node_exporter
+  uri:
+    url: http://localhost:9100/-/reload
+    method: POST

@@ -1,0 +1,10 @@
+---
+dependencies:
+  - role: docker
+  - role: node_exporter
+
+galaxy_info:
+  author: Your Name
+  description: Mosquitto MQTT broker setup
+  license: MIT
+  min_ansible_version: 2.9

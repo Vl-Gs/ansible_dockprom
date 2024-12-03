@@ -1,0 +1,14 @@
+{% raw %}
+service_config:
+  mongodb:
+    port: 27017
+    auth: true
+    replication:
+      enabled: true
+    monitoring:
+      exporters:
+        - mongodb_exporter
+    backup:
+      enabled: true
+      schedule: "0 2 * * *"
+{% endraw %}

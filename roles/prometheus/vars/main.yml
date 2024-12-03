@@ -1,0 +1,4 @@
+---
+prometheus_docker_image: "prom/prometheus:{{ prometheus_version }}"
+prometheus_container_name: prometheus
+prometheus_web_external_url: "http://{{ ansible_fqdn }}:9090"

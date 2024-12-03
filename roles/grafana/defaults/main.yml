@@ -1,0 +1,9 @@
+---
+grafana_version: latest
+grafana_config_dir: /etc/grafana
+grafana_data_dir: /var/lib/grafana
+grafana_docker_image: "grafana/grafana:{{ grafana_version }}"
+grafana_admin_user: admin
+grafana_admin_password: "{{ vault_grafana_admin_password }}"grafana_plugins:
+  - grafana-piechart-panel
+  - grafana-worldmap-panel

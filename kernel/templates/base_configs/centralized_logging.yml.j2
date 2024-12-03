@@ -1,0 +1,10 @@
+logging:
+  collectors:
+    - type: filebeat
+      enabled: true
+    - type: fluentd
+      enabled: true
+  outputs:
+    elasticsearch:
+      host: "localhost:9200"
+      index: "kernel-logs-%{+YYYY.MM.dd}"

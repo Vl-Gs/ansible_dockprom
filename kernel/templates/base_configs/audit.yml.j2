@@ -1,0 +1,35 @@
+audit:
+  events:
+    system_changes:
+      - config_modifications
+      - service_restarts
+      - user_actions
+      - permission_changes
+      
+    security_events:
+      - login_attempts
+      - privilege_escalations
+      - certificate_changes
+      - firewall_modifications
+      
+    data_operations:
+      - backup_operations
+      - data_exports
+      - config_updates
+      - cleanup_tasks
+
+  retention:
+    system_logs: 90d
+    security_logs: 365d
+    operation_logs: 180d
+
+  alerts:
+    security:
+      - unauthorized_access
+      - multiple_failed_logins
+      - config_tampering
+      
+    compliance:
+      - backup_failure
+      - certificate_expiry
+      - policy_violation

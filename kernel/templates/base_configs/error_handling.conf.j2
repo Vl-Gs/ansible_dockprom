@@ -1,0 +1,27 @@
+error_policies:
+  service_restart:
+    max_attempts: 3
+    wait_time: 30s
+    escalation: notify_admin
+
+  config_validation:
+    on_failure: rollback
+    backup_config: true
+    notify: true
+
+  resource_limits:
+    memory_threshold: 85
+    cpu_threshold: 90
+    disk_threshold: 80
+    action: alert
+
+notifications:
+  email:
+    enabled: true
+    smtp_server: {{ smtp_server }}
+    from_address: {{ notification_email }}
+    to_address: {{ admin_email }}
+    
+  slack:
+    enabled: {{ slack_enabled | default(false) }}
+    webhook_url: {{ slack_webhook_url | default('') }}

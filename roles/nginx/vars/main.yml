@@ -1,0 +1,6 @@
+---
+nginx_docker_image: "nginx:{{ nginx_version }}"
+nginx_container_name: nginx
+nginx_exporter_port: 9113
+nginx_metrics_path: /metrics
+nginx_status_port: 8080

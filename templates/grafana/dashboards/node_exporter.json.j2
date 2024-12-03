@@ -1,0 +1,19 @@
+{
+  "title": "Node Exporter Dashboard",
+  "templating": {
+    "list": [
+      {
+        "name": "job",
+        "type": "query",
+        "datasource": "Prometheus",
+        "query": "label_values(node_cpu_seconds_total, job)"
+      },
+      {
+        "name": "instance",
+        "type": "query",
+        "datasource": "Prometheus",
+        "query": "label_values(node_cpu_seconds_total{job=~\"$job\"}, instance)"
+      }
+    ]
+  }
+}

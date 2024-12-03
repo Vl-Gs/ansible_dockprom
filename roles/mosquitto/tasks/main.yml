@@ -1,0 +1,48 @@
+---
+- name: Create Mosquitto directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  with_items:
+    - "{{ mosquitto_config_dir }}"
+    - "{{ mosquitto_data_dir }}"
+    - "{{ mosquitto_log_dir }}"
+    - "{{ mosquitto_ssl_dir }}"
+
+- name: Configure Mosquitto
+  template:
+    src: mosquitto.conf.j2
+    dest: "{{ mosquitto_config_dir }}/mosquitto.conf"
+    mode: '0644'
+  notify: restart mosquitto
+
+- name: Deploy Mosquitto exporter
+  docker_container:
+    name: mosquitto-exporter
+    image: "{{ mosquitto_exporter_image }}"
+    state: started
+    restart_policy: always
+    ports:
+      - "9234:9234"
+    command:
+      - --mosquitto.server=mosquitto:1883
+    networks:
+      - name: monitoring
+
+- name: Deploy Mosquitto container
+  docker_container:
+    name: "{{ mosquitto_container_name }}"
+    image: "{{ mosquitto_docker_image }}"
+    state: started
+    restart_policy: always
+    ports:
+      - "1883:1883"
+      - "8883:8883"
+    volumes:
+      - "{{ mosquitto_config_dir }}:/mosquitto/config"
+      - "{{ mosquitto_data_dir }}:/mosquitto/data"
+      - "{{ mosquitto_log_dir }}:/mosquitto/log"
+      - "{{ mosquitto_ssl_dir }}:/mosquitto/ssl"
+    networks:
+      - name: monitoring

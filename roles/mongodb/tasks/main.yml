@@ -1,0 +1,64 @@
+---
+- name: Create MongoDB directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  with_items:
+    - "{{ mongodb_config_dir }}"
+    - "{{ mongodb_data_dir }}"
+    - "{{ mongodb_log_dir }}"
+
+- name: Configure MongoDB
+  template:
+    src: mongod.conf.j2
+    dest: "{{ mongodb_config_dir }}/mongod.conf"
+    mode: '0644'
+  notify: restart mongodb
+
+- name: Deploy MongoDB exporter
+  docker_container:
+    name: mongodb-exporter
+    image: "{{ mongodb_exporter_image }}"
+    state: started
+    restart_policy: always
+    ports:
+      - "9216:9216"
+    command:
+      - --mongodb.uri=mongodb://mongodb:27017
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--tries=1", "--spider", "http://localhost:9216/metrics"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - name: "{{ docker_network_name }}"
+
+- name: Deploy MongoDB container
+  docker_container:
+    name: "{{ mongodb_container_name }}"
+    networks:
+      - name: "{{ docker_network_name }}"
+    env:
+      MONGO_INITDB_ROOT_USERNAME: "{{ mongodb_root_username | default('admin') }}"
+      MONGO_INITDB_ROOT_PASSWORD: "{{ mongodb_root_password | default('password') }}"
+    ports:
+      - "{{ ports.mongodb }}:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "'db.runCommand(\"ping\").ok'", "||", "exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    image: "{{ mongodb_docker_image }}"
+    state: started
+    restart_policy: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - "{{ mongodb_config_dir }}:/etc/mongo"
+      - "{{ mongodb_data_dir }}:/data/db"
+      - "{{ mongodb_log_dir }}:/var/log/mongodb"
+    networks:
+      - name: monitoring

@@ -1,0 +1,14 @@
+---
+- name: restart docker
+  service:
+    name: docker
+    state: restarted
+
+- name: reload systemd
+  systemd:
+    daemon_reload: yes
+
+- name: validate configs
+  command: docker-compose config
+  args:
+    chdir: "{{ monitoring_base_dir }}"

@@ -1,0 +1,33 @@
+self_healing:
+  actions:
+    service_recovery:
+      - check_service_status
+      - restart_if_failed
+      - verify_after_restart
+      - notify_if_unsuccessful
+    
+    resource_management:
+      - clear_old_logs
+      - cleanup_temp_files
+      - rotate_backups
+      - compress_old_data
+    
+    config_recovery:
+      - validate_config
+      - restore_last_working
+      - test_configuration
+      - apply_if_valid
+
+triggers:
+  service_down:
+    detection: "service_status == 'down'"
+    action: service_recovery
+    max_attempts: 3
+    
+  high_resource_usage:
+    detection: "memory_usage > 85% || disk_usage > 80%"
+    action: resource_management
+    
+  config_corruption:
+    detection: "config_check_failed == true"
+    action: config_recovery

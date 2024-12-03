@@ -1,0 +1,8 @@
+---
+influxdb_version: latest
+influxdb_config_dir: /etc/influxdb
+influxdb_data_dir: /var/lib/influxdb
+influxdb_meta_dir: /var/lib/influxdb/meta
+influxdb_docker_image: "influxdb:{{ influxdb_version }}"
+influxdb_exporter_image: "prometheus/influxdb-exporter:latest"
+influxdb_http_auth_enabled: true

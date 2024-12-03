@@ -1,0 +1,4 @@
+---
+mongodb_docker_image: "mongo:{{ mongodb_version }}"
+mongodb_container_name: mongodb
+mongodb_exporter_port: 9216

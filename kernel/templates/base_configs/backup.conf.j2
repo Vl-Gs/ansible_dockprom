@@ -1,0 +1,11 @@
+backup_path: "{{ monitoring_base_dir }}/backups"
+retention_days: 7
+
+services:
+  prometheus:
+    data_path: "{{ monitoring_base_dir }}/prometheus/data"
+    backup_time: "0 2 * * *"
+    
+  grafana:
+    data_path: "{{ monitoring_base_dir }}/grafana/data"
+    backup_time: "0 3 * * *"

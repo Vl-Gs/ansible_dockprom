@@ -1,0 +1,8 @@
+---
+mongodb_version: latest
+mongodb_config_dir: /etc/mongodb
+mongodb_data_dir: /var/lib/mongodb
+mongodb_log_dir: /var/log/mongodb
+mongodb_docker_image: "mongo:{{ mongodb_version }}"
+mongodb_exporter_image: "bitnami/mongodb-exporter:latest"
+mongodb_auth_enabled: true

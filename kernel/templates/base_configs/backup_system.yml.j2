@@ -1,0 +1,32 @@
+backup:
+  schedules:
+    config_backup:
+      frequency: daily
+      time: "01:00"
+      retention: 30d
+      
+    data_backup:
+      frequency: hourly
+      retention: 7d
+      
+    system_state:
+      frequency: weekly
+      time: "00:00"
+      day: "Sunday"
+      retention: 90d
+      
+  storage:
+    local:
+      path: "{{ monitoring_base_dir }}/backups"
+      max_size: "100GB"
+      
+    remote:
+      enabled: true
+      type: "s3"
+      bucket: "{{ backup_bucket }}"
+      region: "{{ aws_region }}"
+      
+  verification:
+    check_integrity: true
+    test_restore: weekly
+    notify_on_failure: true

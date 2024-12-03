@@ -1,0 +1,30 @@
+security:
+  ssl_configuration:
+    enabled: true
+    cert_path: "{{ monitoring_base_dir }}/certs"
+    auto_renewal: true
+    min_days_before_expiry: 30
+    
+  access_control:
+    authentication:
+      method: "ldap"
+      fallback: "local"
+      session_timeout: 8h
+      
+    authorization:
+      roles:
+        - admin
+        - operator
+        - viewer
+      
+  network_security:
+    allowed_ips: "{{ trusted_ips }}"
+    rate_limiting:
+      enabled: true
+      max_requests: 100
+      window: 1m
+      
+  encryption:
+    data_at_rest: true
+    key_rotation: 90d
+    algorithm: "AES-256"

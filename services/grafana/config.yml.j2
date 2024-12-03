@@ -1,0 +1,12 @@
+{% raw %}
+service_config:
+  grafana:
+    port: 3000
+    admin_user: "{{ grafana_admin_user }}"
+    admin_password: "{{ grafana_admin_password }}"
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://prometheus:9090
+    dashboards_path: /etc/grafana/dashboards
+{% endraw %}

@@ -1,0 +1,27 @@
+version_control:
+  config_versioning:
+    enabled: true
+    backup_location: "{{ monitoring_base_dir }}/versions"
+    max_versions: 10
+    
+  change_tracking:
+    track_configs:
+      - prometheus.yml
+      - alertmanager.yml
+      - grafana.ini
+    track_scripts:
+      - backup_scripts
+      - maintenance_scripts
+      - deployment_scripts
+
+  rollback:
+    automatic:
+      enabled: true
+      max_attempts: 3
+      conditions:
+        - health_check_failed
+        - critical_service_down
+    
+    manual:
+      requires_approval: true
+      approvers: "{{ admin_group }}"

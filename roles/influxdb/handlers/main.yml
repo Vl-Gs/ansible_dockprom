@@ -1,0 +1,10 @@
+---
+- name: restart influxdb
+  docker_container:
+    name: influxdb
+    restart: yes
+
+- name: restart influxdb-exporter
+  docker_container:
+    name: influxdb-exporter
+    restart: yes

@@ -1,0 +1,12 @@
+{% raw %}
+acl_config:
+  users:
+    - username: "{{ mqtt_admin_user }}"
+      access:
+        - topic: "#"
+          access: readwrite
+    - username: "{{ mqtt_reader_user }}"
+      access:
+        - topic: "#"
+          access: read
+{% endraw %}

@@ -1,0 +1,10 @@
+[server]
+http_port = {{ grafana_port }}
+domain = {{ ansible_fqdn }}
+
+[security]
+admin_user = {{ grafana_admin_user }}
+admin_password = {{ grafana_admin_password }}
+
+[auth]
+disable_login_form = false

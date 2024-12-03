@@ -1,0 +1,15 @@
+recovery_policies:
+  automatic:
+    - service_restart
+    - config_reload
+    - clear_cache
+
+  manual_required:
+    - data_corruption
+    - ssl_failure
+    - disk_full
+
+escalation_path:
+  level1: service_owner
+  level2: system_admin
+  level3: emergency_contact

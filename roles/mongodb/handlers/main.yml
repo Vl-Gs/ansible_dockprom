@@ -1,0 +1,10 @@
+---
+- name: restart mongodb
+  docker_container:
+    name: mongodb
+    restart: yes
+
+- name: restart mongodb-exporter
+  docker_container:
+    name: mongodb-exporter
+    restart: yes

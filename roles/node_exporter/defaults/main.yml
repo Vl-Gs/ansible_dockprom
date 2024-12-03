@@ -1,0 +1,4 @@
+---
+# Node Exporter configuration
+node_exporter_image: "prom/node-exporter:latest"
+node_exporter_config_dir: /etc/node_exporter

@@ -1,0 +1,34 @@
+global:
+  scrape_interval: {{ prometheus_scrape_interval }}
+  evaluation_interval: {{ prometheus_evaluation_interval }}
+
+rule_files:
+  - "rules/*.yml"
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets: 
+        {% for host in groups['all'] %}
+        - {{ hostvars[host]['ansible_host'] }}:9100
+        {% endfor %}
+
+  - job_name: 'mongodb_exporter'
+    static_configs:
+      - targets: ['mongodb-exporter:9216']
+
+  - job_name: 'influxdb_exporter'
+    static_configs:
+      - targets: ['influxdb-exporter:9122']
+
+  - job_name: 'mosquitto_exporter'
+    static_configs:
+      - targets: ['mosquitto-exporter:9234']
+
+  - job_name: 'nginx_exporter'
+    static_configs:
+      - targets: ['nginx-exporter:9113']

@@ -1,0 +1,37 @@
+---
+- name: Deploy Monitoring Stack
+  hosts: all
+  become: true
+  
+  pre_tasks:
+    - name: Create Docker network
+      docker_network:
+        name: "{{ docker_network_name }}"
+        state: present
+
+    - name: Gather services
+      set_fact:
+        detected_services: "{{ groups['all'] | map('extract', hostvars) | map(attribute='services') | flatten | unique | list }}"
+
+  tasks:
+    - name: Include kernel setup
+      include_role:
+        name: kernel
+
+    - name: Deploy monitoring services
+      include_role:
+        name: "{{ item }}"
+      when: "item in hostvars[inventory_hostname].services"
+      with_items: "{{ detected_services }}"
+      tags:
+        - deploy_services
+      register: service_deployment
+      until: service_deployment is success
+      retries: 3
+      delay: 5
+        - prometheus
+        - grafana
+        - mongodb
+        - influxdb
+        - mosquitto
+        - nginx

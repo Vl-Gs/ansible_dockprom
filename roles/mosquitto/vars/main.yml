@@ -1,0 +1,5 @@
+---
+mosquitto_docker_image: "eclipse-mosquitto:{{ mosquitto_version }}"
+mosquitto_container_name: mosquitto
+mosquitto_exporter_port: 9234
+mosquitto_metrics_path: /metrics

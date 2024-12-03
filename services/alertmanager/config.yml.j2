@@ -1,0 +1,11 @@
+{% raw %}
+service_config:
+  alertmanager:
+    port: 9093
+    resolve_timeout: 5m
+    route:
+      group_by: ['alertname', 'instance']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 1h
+{% endraw %}

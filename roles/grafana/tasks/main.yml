@@ -1,0 +1,67 @@
+---
+- name: Create Grafana directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  with_items:
+    - "{{ grafana_config_dir }}"
+    - "{{ grafana_data_dir }}"
+    - "{{ grafana_config_dir }}/provisioning/datasources"
+    - "{{ grafana_config_dir }}/provisioning/dashboards"
+
+- name: Configure Grafana
+  template:
+    src: grafana.ini.j2
+    dest: "{{ grafana_config_dir }}/grafana.ini"
+  notify: restart grafana
+
+- name: Configure Grafana datasources
+  template:
+    src: datasources/prometheus.yml.j2
+    dest: "{{ grafana_config_dir }}/provisioning/datasources/prometheus.yml"
+    mode: '0644'
+
+- name: Configure Grafana dashboards
+  template:
+    src: "dashboards/{{ item }}.json.j2"
+    dest: "{{ grafana_config_dir }}/provisioning/dashboards/{{ item }}.json"
+    mode: '0644'
+  with_items:
+    - node_exporter
+    - prometheus
+    - mongodb
+    - influxdb
+
+- name: Install Grafana plugins
+  docker_container:
+    name: grafana-plugin-installer
+    image: "{{ grafana_docker_image }}"
+    command: grafana-cli plugins install {{ item }}
+    networks:
+      - name: "{{ docker_network_name }}"
+  with_items: "{{ grafana_plugins }}"
+
+- name: Deploy Grafana container
+  docker_container:
+    name: "{{ grafana_container_name }}"
+    image: "{{ grafana_docker_image }}"
+    state: started
+    restart_policy: always
+    networks:
+      - name: "{{ docker_network_name }}"
+    ports:
+      - "{{ ports.grafana }}:3000"
+    volumes:
+      - "{{ grafana_config_dir }}:/etc/grafana"
+      - "{{ grafana_data_dir }}:/var/lib/grafana"
+    env:
+      GF_SECURITY_ADMIN_PASSWORD: "{{ grafana_admin_password | default('admin') }}"
+      GF_INSTALL_PLUGINS: "{{ grafana_plugins | join(',') }}"
+      GF_PATHS_PROVISIONING: "/etc/grafana/provisioning"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s

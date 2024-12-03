@@ -1,0 +1,17 @@
+---
+- name: restart nginx
+  docker_container:
+    name: "{{ nginx_container_name }}"
+    restart: yes
+
+- name: restart nginx-exporter
+  docker_container:
+    name: nginx-exporter
+    restart: yes
+
+- name: reload nginx
+  command: "docker exec {{ nginx_container_name }} nginx -s reload"
+
+- name: validate nginx
+  command: "docker exec {{ nginx_container_name }} nginx -t"
+  notify: reload nginx

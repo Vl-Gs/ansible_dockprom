@@ -1,0 +1,16 @@
+{% raw %}
+service_config:
+  influxdb:
+    port: 8086
+    auth:
+      enabled: true
+    retention:
+      enabled: true
+      duration: 30d
+    monitoring:
+      exporters:
+        - influxdb_exporter
+    backup:
+      enabled: true
+      schedule: "0 3 * * *"
+{% endraw %}

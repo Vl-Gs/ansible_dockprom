@@ -1,0 +1,11 @@
+---
+mosquitto_version: latest
+mosquitto_config_dir: /etc/mosquitto
+mosquitto_data_dir: /var/lib/mosquitto/data
+mosquitto_log_dir: /var/lib/mosquitto/log
+mosquitto_ssl_dir: /etc/mosquitto/ssl
+mosquitto_docker_image: "eclipse-mosquitto:{{ mosquitto_version }}"
+mosquitto_exporter_image: "sapcc/mosquitto-exporter:latest"
+mosquitto_port: 1883
+mosquitto_ssl_port: 8883
+mosquitto_ssl_enabled: true

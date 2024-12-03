@@ -1,0 +1,4 @@
+---
+influxdb_docker_image: "influxdb:{{ influxdb_version }}"
+influxdb_container_name: influxdb
+influxdb_exporter_port: 9122

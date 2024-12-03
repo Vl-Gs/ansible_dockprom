@@ -1,0 +1,16 @@
+interval: {{ health_check_interval }}
+timeout: 10s
+retries: 3
+
+services:
+  prometheus:
+    http_endpoint: http://localhost:9090/-/healthy
+    expected_status: 200
+  
+  grafana:
+    http_endpoint: http://localhost:3000/api/health
+    expected_status: 200
+    
+  alertmanager:
+    http_endpoint: http://localhost:9093/-/healthy
+    expected_status: 200

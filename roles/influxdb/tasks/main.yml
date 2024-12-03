@@ -1,0 +1,68 @@
+---
+- name: Create InfluxDB directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  with_items:
+    - "{{ influxdb_config_dir }}"
+    - "{{ influxdb_data_dir }}"
+    - "{{ influxdb_meta_dir }}"
+
+- name: Configure InfluxDB
+  template:
+    src: influxdb.conf.j2
+    dest: "{{ influxdb_config_dir }}/influxdb.conf"
+    mode: '0644'
+  notify: restart influxdb
+
+- name: Deploy InfluxDB exporter
+  docker_container:
+    name: influxdb-exporter
+    image: "{{ influxdb_exporter_image }}"
+    state: started
+    restart_policy: always
+    ports:
+      - "9122:9122"
+    command:
+      - --influxdb.server=http://influxdb:8086
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--tries=1", "--spider", "http://localhost:9122/metrics"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - name: "{{ docker_network_name }}"
+
+- name: Deploy InfluxDB container
+  docker_container:
+    name: "{{ influxdb_container_name }}"
+    image: "{{ influxdb_docker_image }}"
+    networks:
+      - name: "{{ docker_network_name }}"
+    env:
+      DOCKER_INFLUXDB_INIT_MODE: "setup"
+      DOCKER_INFLUXDB_INIT_USERNAME: "{{ influxdb_admin_user | default('admin') }}"
+      DOCKER_INFLUXDB_INIT_PASSWORD: "{{ influxdb_admin_password | default('password') }}"
+      DOCKER_INFLUXDB_INIT_ORG: "{{ influxdb_org | default('monitoring') }}"
+      DOCKER_INFLUXDB_INIT_BUCKET: "{{ influxdb_bucket | default('metrics') }}"
+    ports:
+      - "{{ ports.influxdb }}:8086"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8086/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    image: "{{ influxdb_docker_image }}"
+    state: started
+    restart_policy: always
+    ports:
+      - "8086:8086"
+    volumes:
+      - "{{ influxdb_config_dir }}:/etc/influxdb"
+      - "{{ influxdb_data_dir }}:/var/lib/influxdb"
+      - "{{ influxdb_meta_dir }}:/var/lib/influxdb/meta"
+    networks:
+      - name: monitoring

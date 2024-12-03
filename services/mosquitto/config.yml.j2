@@ -1,0 +1,19 @@
+{% raw %}
+service_config:
+  mosquitto:
+    port: 1883
+    ssl:
+      enabled: true
+      port: 8883
+    auth:
+      enabled: true
+    monitoring:
+      exporters:
+        - mqtt_exporter
+    persistence:
+      enabled: true
+      location: /mosquitto/data
+    logs:
+      general: /mosquitto/log/mosquitto.log
+      debug: /mosquitto/log/debug.log
+{% endraw %}

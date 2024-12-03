@@ -1,0 +1,30 @@
+kernel_metrics:
+  system:
+    - memory_usage
+    - cpu_load
+    - disk_usage
+    - network_io
+    
+  services:
+    - service_status
+    - container_health
+    - config_validity
+    - backup_status
+
+  security:
+    - ssl_expiry
+    - failed_login_attempts
+    - config_changes
+    
+alerts:
+  critical:
+    memory_usage: "> 90%"
+    cpu_load: "> 95%"
+    disk_usage: "> 85%"
+    service_down: "> 5m"
+    
+  warning:
+    memory_usage: "> 80%"
+    cpu_load: "> 85%"
+    disk_usage: "> 75%"
+    backup_failed: "last 24h"

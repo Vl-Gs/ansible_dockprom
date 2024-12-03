@@ -1,0 +1,10 @@
+{% raw %}
+service_config:
+  prometheus:
+    port: 9090
+    retention: 15d
+    scrape_interval: 15s
+    targets: "{{ groups['all'] | map('extract', hostvars) | map(attribute='services') | flatten | unique }}"
+    rules_path: /etc/prometheus/rules
+    storage_path: /prometheus
+{% endraw %}

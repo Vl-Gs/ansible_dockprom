@@ -1,0 +1,10 @@
+---
+nginx_version: latest
+nginx_config_dir: /etc/nginx
+nginx_ssl_dir: /etc/nginx/ssl
+nginx_log_dir: /var/log/nginx
+nginx_sites_dir: /etc/nginx/conf.d
+nginx_docker_image: "nginx:{{ nginx_version }}"
+nginx_exporter_image: "nginx/nginx-prometheus-exporter:latest"
+nginx_worker_connections: 1024
+nginx_container_name: nginx

@@ -1,0 +1,38 @@
+reporting:
+  scheduled_reports:
+    daily:
+      - type: system_health
+        time: "23:00"
+        format: pdf
+        recipients: "{{ admin_email }}"
+        
+    weekly:
+      - type: performance_metrics
+        day: "Sunday"
+        time: "22:00"
+        format: xlsx
+        
+    monthly:
+      - type: compliance_report
+        day: "1"
+        time: "01:00"
+        format: pdf
+
+  metrics_collection:
+    system_metrics:
+      interval: 5m
+      retention: 30d
+      
+    service_metrics:
+      interval: 1m
+      retention: 15d
+      
+    audit_logs:
+      interval: 1h
+      retention: 90d
+
+  export_formats:
+    - json
+    - csv
+    - pdf
+    - xlsx

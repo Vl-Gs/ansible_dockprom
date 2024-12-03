@@ -1,0 +1,52 @@
+all:
+  vars:
+    ansible_user: your_ssh_user
+    ansible_ssh_private_key_file: /path/to/your/private/key
+  children:
+    ml_servers:
+      hosts:
+        ml_server_1:
+          ansible_host: 192.168.1.1
+          services:
+            - node_exporter
+            - mongodb
+            - influxdb
+            - prometheus
+            - grafana
+            - nginx
+            - docker
+    dev_servers:
+      hosts:
+        dev_server_1:
+          ansible_host: 192.168.2.1
+          services:
+            - node_exporter
+            - docker
+            - nginx
+            - mongodb
+            - mosquitto
+    prod_servers:
+      hosts:
+        prod_server_1:
+          ansible_host: 192.168.3.1
+          services:
+            - node_exporter
+            - docker
+            - nginx
+            - mongodb
+    backup_prod:
+      hosts:
+        backup_prod_1:
+          ansible_host: 192.168.4.1
+          services:
+            - node_exporter
+            - docker
+            - nginx
+            - mosquitto
+    prod_db:
+      hosts:
+        prod_db_1:
+          ansible_host: 192.168.5.1
+          services:
+            - node_exporter
+            - influxdb

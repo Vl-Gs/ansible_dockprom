@@ -1,0 +1,10 @@
+---
+dependencies:
+  - role: docker
+  - role: prometheus
+
+galaxy_info:
+  author: Your Name
+  description: Grafana dashboard setup
+  license: MIT
+  min_ansible_version: 2.9

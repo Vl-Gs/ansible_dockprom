@@ -1,0 +1,55 @@
+---
+- name: Create Nginx directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  with_items:
+    - "{{ nginx_config_dir }}"
+    - "{{ nginx_ssl_dir }}"
+    - "{{ nginx_log_dir }}"
+    - "{{ nginx_sites_dir }}"
+
+- name: Copy default Nginx configuration
+  template:
+    src: default.conf.j2
+    dest: "{{ nginx_sites_dir }}/default.conf"
+    mode: '0644'
+  notify: validate nginx
+
+- name: Configure Nginx
+  template:
+    src: nginx.conf.j2
+    dest: "{{ nginx_config_dir }}/nginx.conf"
+    mode: '0644'
+  notify: validate nginx
+
+- name: Deploy Nginx exporter
+  docker_container:
+    name: nginx-exporter
+    image: "{{ nginx_exporter_image }}"
+    state: started
+    restart_policy: always
+    ports:
+      - "9113:9113"
+    command:
+      - -nginx.scrape-uri=http://{{ nginx_container_name }}:80/stub_status
+    networks:
+      - name: monitoring
+
+- name: Deploy Nginx container
+  docker_container:
+    name: "{{ nginx_container_name }}"
+    image: "{{ nginx_docker_image }}"
+    state: started
+    restart_policy: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "{{ nginx_config_dir }}:/etc/nginx"
+      - "{{ nginx_ssl_dir }}:/etc/nginx/ssl"
+      - "{{ nginx_log_dir }}:/var/log/nginx"
+      - "{{ nginx_sites_dir }}:/etc/nginx/conf.d"
+    networks:
+      - name: monitoring

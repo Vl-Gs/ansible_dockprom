@@ -1,0 +1,14 @@
+---
+kernel_monitoring_enabled: true
+kernel_backup_enabled: true
+kernel_ssl_enabled: true
+kernel_log_retention: 30
+kernel_metrics_interval: 15s
+kernel_docker_network: monitoring
+
+kernel_required_packages:
+  - curl
+  - wget
+  - python3-pip
+  - python3-docker
+  - python3-yaml

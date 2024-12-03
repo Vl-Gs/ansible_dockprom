@@ -1,0 +1,20 @@
+---
+- name: Include validation tasks
+  include_tasks: validate.yml
+
+- name: Include preparation tasks
+  include_tasks: prepare.yml
+
+- name: Setup SSL certificates
+  include_tasks: ssl.yml
+  when: ssl_enabled | bool
+
+- name: Configure health checks
+  template:
+    src: "base_configs/healthcheck.conf.j2"
+    dest: "{{ monitoring_base_dir }}/healthcheck.conf"
+
+- name: Setup error handling
+  template:
+    src: "base_configs/error_handling.conf.j2"
+    dest: "{{ monitoring_base_dir }}/error_handling.conf"

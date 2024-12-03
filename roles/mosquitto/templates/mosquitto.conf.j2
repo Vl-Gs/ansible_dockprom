@@ -1,0 +1,14 @@
+listener {{ mosquitto_port }}
+persistence true
+persistence_location {{ mosquitto_data_dir }}
+log_dest file {{ mosquitto_log_dir }}/mosquitto.log
+
+{% if mosquitto_ssl_enabled %}
+listener {{ mosquitto_ssl_port }}
+certfile {{ mosquitto_ssl_dir }}/server.crt
+keyfile {{ mosquitto_ssl_dir }}/server.key
+require_certificate true
+{% endif %}
+
+connection_messages true
+log_timestamp true

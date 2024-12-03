@@ -1,0 +1,15 @@
+groups:
+{% for service in ['node_exporter', 'prometheus', 'mongodb', 'influxdb'] %}
+{% if service in detected_services %}
+- name: {{ service }}_alerts
+  rules:
+  - alert: {{ service | capitalize }}InstanceDown
+    expr: up{job="{{ service }}"} == 0
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Instance {{ '$labels.instance' }} down"
+      description: "{{ service | capitalize }} instance has been down for more than 5 minutes."
+{% endif %}
+{% endfor %}

@@ -1,0 +1,12 @@
+[meta]
+  dir = "{{ influxdb_meta_dir }}"
+
+[data]
+  dir = "{{ influxdb_data_dir }}"
+  wal-dir = "{{ influxdb_data_dir }}/wal"
+
+[http]
+  enabled = true
+  bind-address = ":8086"
+  auth-enabled = {{ influxdb_http_auth_enabled | lower }}
+  log-enabled = true

@@ -1,0 +1,16 @@
+storage:
+  dbPath: {{ mongodb_data_dir }}
+  journal:
+    enabled: true
+
+systemLog:
+  destination: file
+  logAppend: true
+  path: {{ mongodb_log_dir }}/mongod.log
+
+net:
+  port: 27017
+  bindIp: 0.0.0.0
+
+security:
+  authorization: {{ mongodb_auth_enabled | lower }}

@@ -1,0 +1,13 @@
+---
+- name: restart mosquitto
+  docker_container:
+    name: mosquitto
+    restart: yes
+
+- name: restart mosquitto-exporter
+  docker_container:
+    name: mosquitto-exporter
+    restart: yes
+
+- name: reload mosquitto
+  command: docker exec mosquitto mosquitto -s reload

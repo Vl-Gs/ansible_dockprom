@@ -1,0 +1,4 @@
+---
+grafana_docker_image: "grafana/grafana:{{ grafana_version }}"
+grafana_container_name: grafana
+grafana_web_external_url: "http://{{ ansible_fqdn }}:3000"

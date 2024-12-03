@@ -1,0 +1,23 @@
+---
+- name: Create base directories
+  file:
+    path: "{{ monitoring_base_dir }}/{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - prometheus
+    - grafana
+    - alertmanager
+    - certs
+    - backups
+    - logs
+
+- name: Setup logging
+  template:
+    src: "base_configs/logging.conf.j2"
+    dest: "{{ monitoring_base_dir }}/logs/logging.conf"
+
+- name: Configure backup system
+  template:
+    src: "base_configs/backup.conf.j2"
+    dest: "{{ monitoring_base_dir }}/backups/backup.conf"
